@@ -41,28 +41,6 @@ module "alb" {
 }
 
 
-# 5- EC2 Instances
-module "app" {
-  source = "./modules/app"
-
-
-  # Networking
-  subnet_vote_id    = module.network.private_subnet_a_id
-  subnet_result_id  = module.network.private_subnet_b_id
-  public_subnet_id  = module.network.public_subnet_id
-  private_subnet_id = module.network.private_subnet_id
-
-  vote_sg_id     = module.security.vote_sg_id
-  result_sg_id   = module.security.result_sg_id
-  bastion_sg_id  = module.security.bastion_sg_id
-  backend_sg_id  = module.security.backend_sg_id
-  postgres_sg_id = module.security.postgres_sg_id
-  frontend_sg_id = module.security.frontend_sg_id
-
-  key_pair_name = var.key_pair_name
-  ami_id        = var.ami_id
-}
-
 # 6- DNS
 module "dns" {
   source       = "./modules/dns"
