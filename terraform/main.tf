@@ -14,37 +14,36 @@ module "security" {
 
 
 # 3- Certificate for vote/result (multi-SAN) + validation
-module "cert" {
-  source      = "./modules/cert"
-  root_domain = var.root_domain
-}
-
+#module "cert" {
+#  source      = "./modules/cert"
+#  root_domain = var.root_domain
+#}
 
 
 # 4- ALB + Target groups + HTTPS Listener + host-based rules
-module "alb" {
-  source            = "./modules/alb"
-  vpc_id            = module.network.vpc_id
-  public_subnet_ids = module.network.public_subnet_ids
+#module "alb" {
+#  source            = "./modules/alb"
+#  vpc_id            = module.network.vpc_id
+#  public_subnet_ids = module.network.public_subnet_ids
 
-  alb_sg_id = module.security.alb_sg_id
-  cert_arn  = module.cert.certificate_arn
+#  alb_sg_id = module.security.alb_sg_id
+#  cert_arn  = module.cert.certificate_arn
 
   # targets
-  vote_instance_id   = module.app.vote_instance_id
-  result_instance_id = module.app.result_instance_id
+#  vote_instance_id   = module.app.vote_instance_id
+#  result_instance_id = module.app.result_instance_id
 
-  vote_instance2_id   = module.app.vote_instance2_id
-  result_instance2_id = module.app.result_instance2_id
+# vote_instance2_id   = module.app.vote_instance2_id
+#  result_instance2_id = module.app.result_instance2_id
 
-  root_domain = var.root_domain
+#  root_domain = var.root_domain
 }
 
 
 # 6- DNS
-module "dns" {
-  source       = "./modules/dns"
-  root_domain  = var.root_domain
-  alb_dns_name = module.alb.alb_dns_name
-  alb_zone_id  = module.alb.alb_zone_id
-}
+#module "dns" {
+#  source       = "./modules/dns"
+#  root_domain  = var.root_domain
+#  alb_dns_name = module.alb.alb_dns_name
+#  alb_zone_id  = module.alb.alb_zone_id
+#}
