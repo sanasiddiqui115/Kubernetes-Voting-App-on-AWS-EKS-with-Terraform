@@ -61,9 +61,9 @@ resource "aws_iam_role_policy_attachment" "node_ecr" {
 }
 
 # Node Group
-resource "aws_eks_node_group" "this" {
+resource "aws_eks_node_group" "frontend_node" {
   cluster_name    = aws_eks_cluster.this.name
-  node_group_name = "${var.cluster_name}-node-group"
+  node_group_name = "${var.cluster_name}-frontend-node-group"
   node_role_arn   = aws_iam_role.eks_node_role.arn
   subnet_ids      = var.subnet_ids
 
@@ -74,4 +74,46 @@ resource "aws_eks_node_group" "this" {
   }
 
   instance_types = [var.node_instance_type]
+
+  labels = {
+    role = "frontend"
+  }
+}
+
+resource "aws_eks_node_group" "backend_node" {
+  cluster_name    = aws_eks_cluster.this.name
+  node_group_name = "${var.cluster_name}-backend-node-group"
+  node_role_arn   = aws_iam_role.eks_node_role.arn
+  subnet_ids      = var.subnet_ids
+
+  scaling_config {
+    desired_size = var.node_desired
+    max_size     = var.node_max
+    min_size     = var.node_min
+  }
+
+  instance_types = [var.node_instance_type]
+
+  labels = {
+    role = "backend"
+  }
+}
+
+resource "aws_eks_node_group" "db_node" {
+  cluster_name    = aws_eks_cluster.this.name
+  node_group_name = "${var.cluster_name}-db-node-group"
+  node_role_arn   = aws_iam_role.eks_node_role.arn
+  subnet_ids      = var.subnet_ids
+
+  scaling_config {
+    desired_size = var.node_desired
+    max_size     = var.node_max
+    min_size     = var.node_min
+  }
+
+  instance_types = [var.node_instance_type]
+
+  labels = {
+    role = "db"
+  }
 }

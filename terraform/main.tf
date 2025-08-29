@@ -13,6 +13,18 @@ module "security" {
 }
 
 
+
+# 3 - EKS Cluster
+module "cluster" {
+  source             = "./modules/cluster"
+  cluster_name       = "sana-eks"
+  subnet_ids         = module.network.private_subnet_ids
+  node_instance_type = "t3.medium"
+  node_desired       = 2
+  node_min           = 1
+  node_max           = 3
+}
+
 # 3- Certificate for vote/result (multi-SAN) + validation
 #module "cert" {
 #  source      = "./modules/cert"
