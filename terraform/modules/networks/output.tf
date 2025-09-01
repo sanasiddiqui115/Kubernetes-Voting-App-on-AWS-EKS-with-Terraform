@@ -30,3 +30,11 @@ output "private_subnet_b_id" {
   description = "Private subnet B ID"
   value       = aws_subnet.sana_private_subnet_b.id
 }
+
+output "private_subnet_ids" {
+  description = "List of private subnet IDs"
+  value = [
+    aws_subnet.sana_private_subnet_a.id,
+    aws_subnet.sana_private_subnet_b.id,
+  ]
+}

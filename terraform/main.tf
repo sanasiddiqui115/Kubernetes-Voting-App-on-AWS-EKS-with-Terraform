@@ -17,12 +17,12 @@ module "security" {
 # 3 - EKS Cluster
 module "cluster" {
   source             = "./modules/cluster"
-  cluster_name       = "sana-eks"
+  cluster_name       = "sana-project2-eks"
   subnet_ids         = module.network.private_subnet_ids
   node_instance_type = "t3.medium"
-  node_desired       = 2
+  node_desired       = 1
   node_min           = 1
-  node_max           = 3
+  node_max           = 1
 }
 
 # 3- Certificate for vote/result (multi-SAN) + validation
@@ -41,7 +41,7 @@ module "cluster" {
 #  alb_sg_id = module.security.alb_sg_id
 #  cert_arn  = module.cert.certificate_arn
 
-  # targets
+# targets
 #  vote_instance_id   = module.app.vote_instance_id
 #  result_instance_id = module.app.result_instance_id
 
@@ -49,7 +49,7 @@ module "cluster" {
 #  result_instance2_id = module.app.result_instance2_id
 
 #  root_domain = var.root_domain
-}
+#}
 
 
 # 6- DNS

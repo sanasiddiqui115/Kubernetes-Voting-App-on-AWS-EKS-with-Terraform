@@ -5,15 +5,15 @@ variable "cidr_block" {
 
 variable "availability_zone" {
   type    = string
-  default = "us-east-1"
+  default = "me-central-1"
 }
 
 variable "subnet_availability_zone" {
   type    = string
-  default = "us-east-1a"
+  default = "me-central-1a"
 }
 
 variable "secondary_subnet_availability_zone" {
   type    = string
-  default = "us-east-1b"
+  default = "me-central-1b"
 }

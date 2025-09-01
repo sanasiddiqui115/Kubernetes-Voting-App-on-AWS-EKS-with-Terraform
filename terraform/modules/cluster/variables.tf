@@ -16,7 +16,7 @@ variable "node_instance_type" {
 
 variable "node_desired" {
   type    = number
-  default = 2
+  default = 1
 }
 
 variable "node_min" {
@@ -26,5 +26,5 @@ variable "node_min" {
 
 variable "node_max" {
   type    = number
-  default = 3
+  default = 1
 }

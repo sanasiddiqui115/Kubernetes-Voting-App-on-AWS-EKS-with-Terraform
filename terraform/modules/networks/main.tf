@@ -81,6 +81,7 @@ resource "aws_route_table_association" "sana_public_rt_assoc" {
 # --- Nat Gateway + Route Tables --- #
 
 resource "aws_eip" "nat_eip" {
+  domain = "vpc"
   tags = {
     Name = "nat-eip"
   }
@@ -93,6 +94,8 @@ resource "aws_nat_gateway" "nat_gw" {
   tags = {
     Name = "SanaNATGateway"
   }
+
+  depends_on = [aws_internet_gateway.sana_igw]
 }
 
 resource "aws_route_table" "private_rt" {

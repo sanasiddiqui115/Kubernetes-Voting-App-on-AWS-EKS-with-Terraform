@@ -11,12 +11,12 @@ variable "instance_type" {
 
 variable "availability_zone" {
   type    = string
-  default = "us-east-1"
+  default = "me-central-1"
 }
 
 variable "subnet_availability_zone" {
   type    = string
-  default = "us-east-1a"
+  default = "me-central-1a"
 }
 
 variable "cidr_block" {
@@ -32,7 +32,7 @@ variable "ami_id" {
 
 variable "secondary_subnet_availability_zone" {
   type    = string
-  default = "us-east-1b"
+  default = "me-central-1b"
 }
 
 variable "root_domain" {
