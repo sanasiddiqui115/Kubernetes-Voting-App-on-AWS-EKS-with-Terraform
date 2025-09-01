@@ -75,10 +75,10 @@ jobs:
 
     # Install kubectl
     - name: Install kubectl
-      run: |
-        curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-        chmod +x kubectl
-        sudo mv kubectl /usr/local/bin/
+      uses: aws-actions/setup-kubectl@v3
+      with:
+        version: 'latest'
+
 
     # Install eksctl
     - name: Install eksctl
@@ -88,8 +88,8 @@ jobs:
 
     # Update kubeconfig
     - name: Update kubeconfig
-      run: eksctl utils write-kubeconfig --cluster ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
-
+      run: aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.EKS_CLUSTER_NAME }}
+    
     # Deploy changed service
     - name: Update Deployment image
       if: env.IMAGE != ''
