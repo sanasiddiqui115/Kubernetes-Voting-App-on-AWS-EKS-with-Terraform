@@ -75,9 +75,10 @@ jobs:
 
     # Install kubectl
     - name: Install kubectl
-      uses: aws-actions/setup-kubectl@v3
+      uses: azure/setup-kubectl@v3
       with:
         version: 'latest'
+
 
 
     # Install eksctl
