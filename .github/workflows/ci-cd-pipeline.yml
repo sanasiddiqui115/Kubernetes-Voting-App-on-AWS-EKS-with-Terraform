@@ -1,0 +1,98 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout code
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    # Detect changes
+    - name: Detect changes
+      id: changes
+      uses: dorny/paths-filter@v3
+      with:
+        filters: |
+          vote:
+            - 'vote/**'
+          result:
+            - 'result/**'
+          worker:
+            - 'worker/**'
+
+    # Log in to Docker Hub
+    - name: Docker login
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    # Build & push Vote if changed
+    - name: Build & push Vote
+      if: steps.changes.outputs.vote == 'true'
+      run: |
+        IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/vote:${{ github.sha }}
+        docker build -t $IMAGE ./vote
+        docker push $IMAGE
+        echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+        echo "SERVICE=vote" >> $GITHUB_ENV
+
+    # Build & push Result if changed
+    - name: Build & push Result
+      if: steps.changes.outputs.result == 'true'
+      run: |
+        IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/result:${{ github.sha }}
+        docker build -t $IMAGE ./result
+        docker push $IMAGE
+        echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+        echo "SERVICE=result" >> $GITHUB_ENV
+
+    # Build & push Worker if changed
+    - name: Build & push Worker
+      if: steps.changes.outputs.worker == 'true'
+      run: |
+        IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/worker:${{ github.sha }}
+        docker build -t $IMAGE ./worker
+        docker push $IMAGE
+        echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+        echo "SERVICE=worker" >> $GITHUB_ENV
+
+    # Configure AWS creds
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    # Install kubectl
+    - name: Install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x kubectl
+        sudo mv kubectl /usr/local/bin/
+
+    # Install eksctl
+    - name: Install eksctl
+      run: |
+        curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+        sudo mv /tmp/eksctl /usr/local/bin
+
+    # Update kubeconfig
+    - name: Update kubeconfig
+      run: eksctl utils write-kubeconfig --cluster ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+
+    # Deploy changed service
+    - name: Update Deployment image
+      if: env.IMAGE != ''
+      run: |
+        echo "Updating $SERVICE deployment to $IMAGE"
+        kubectl set image deployment/$SERVICE $SERVICE=$IMAGE
