@@ -11,6 +11,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      #debug
+      - name: Debug repo contents
+        run: |
+          pwd
+          ls -R
+
       # Checkout source
       - name: Checkout repo
         uses: actions/checkout@v3
