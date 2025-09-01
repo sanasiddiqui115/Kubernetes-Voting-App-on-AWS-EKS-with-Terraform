@@ -17,7 +17,6 @@ terraform.tfvars.json
 # Docker
 # ───────────────────────────────
 **/.dockerignore
-**/Dockerfile*
 **/docker-compose*.yml
 .docker/
 docker-compose.override.yml
