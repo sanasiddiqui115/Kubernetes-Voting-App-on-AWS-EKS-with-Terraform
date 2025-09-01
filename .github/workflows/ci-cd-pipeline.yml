@@ -36,12 +36,12 @@ jobs:
 
       - name: Build & push Result image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/result:latest -f result/Dockerfile .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/result:latest -f result/Dockerfile result/
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/result:latest
 
       - name: Build & push Worker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/worker:latest -f worker/Dockerfile .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/worker:latest -f worker/Dockerfile worker/
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/worker:latest
 
       # Configure AWS creds
