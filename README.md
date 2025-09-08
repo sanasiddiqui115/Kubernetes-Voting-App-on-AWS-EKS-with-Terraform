@@ -1,3 +1,8 @@
+# Project 2 – Kubernetes Voting App on AWS EKS
+
+This project demonstrates deploying a multi-service voting application on **Amazon Elastic Kubernetes Service (EKS)** using **Terraform** for cluster provisioning and **Kubernetes manifests** for workloads.  
+It integrates **Redis** and **PostgreSQL** with persistent volumes, and secures communication using **Network Policies**.
+
 <!-- © 2024 | Ironhack -->
 
 ---
